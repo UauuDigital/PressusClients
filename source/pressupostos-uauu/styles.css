@@ -17,6 +17,7 @@ body {
   line-height: 1.55;
   color: var(--color-ink);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .page-header {
@@ -331,6 +332,7 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--color-muted);
   cursor: pointer;
   transition: var(--transition);
+  min-height: 44px;
 }
 
 .toggle-btn:first-child {
@@ -710,6 +712,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   transition: var(--transition);
   margin-top: 24px;
+  min-height: 48px;
 }
 
 .export-btn:hover {
@@ -727,10 +730,23 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ── Responsivitat ── */
 
+@media (max-width: 1200px) {
+  .page-header,
+  .form-panel,
+  .summary-panel {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .app-body {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+}
+
 /* Ajustos per a Tabletes i Pantalles Mitjanes */
 @media (max-width: 1024px) {
   .app-body {
-    grid-template-columns: 1fr; /* El resum passa a sota del formulari */
+    grid-template-columns: 1fr;
   }
 
   .form-panel {
@@ -739,23 +755,24 @@ input[type="range"]::-webkit-slider-thumb {
   }
 
   .summary-panel {
-    position: static; /* Deixa d'estar fix al lateral */
+    position: static;
     height: auto;
     padding: 48px 32px;
+    border-top: 1px solid var(--color-divider);
   }
 
   .page-logo {
-    transform: scale(2); /* Reduïm una mica l'escala del logo */
+    transform: scale(2);
   }
 }
 
 /* Ajustos per a Mòbils */
 @media (max-width: 768px) {
   .page-header {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px 18px 16px;
   }
 
   .page-header-side {
@@ -763,18 +780,53 @@ input[type="range"]::-webkit-slider-thumb {
     justify-content: center;
   }
 
+  .page-header-left,
+  .page-header-right,
+  .page-header-center {
+    justify-self: center;
+  }
+
   .page-logo {
-    transform: scale(1.5);
+    transform: none;
+    max-width: min(220px, 72vw);
+    height: auto;
     transform-origin: center;
     margin: 0 auto;
   }
 
+  .page-header-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+  }
+
+  .lang-btn {
+    padding: 9px 12px;
+    font-size: 10px;
+  }
+
+  .form-panel,
+  .summary-panel {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .form-panel {
+    padding-top: 28px;
+    padding-bottom: 52px;
+  }
+
+  .summary-panel {
+    padding-top: 32px;
+    padding-bottom: 56px;
+  }
+
   .venue-grid {
-    grid-template-columns: 1fr; /* Una finca per fila */
+    grid-template-columns: 1fr;
   }
 
   .field-row {
-    grid-template-columns: 1fr; /* Inputs un sota l'altre */
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .extra-item {
@@ -786,7 +838,7 @@ input[type="range"]::-webkit-slider-thumb {
   .extra-toggle, 
   .extra-quantity {
     margin-left: 0;
-    align-self: flex-start; /* Controls aliniats a l'esquerra */
+    align-self: flex-start;
     width: 100%;
   }
 
@@ -794,23 +846,84 @@ input[type="range"]::-webkit-slider-thumb {
     flex: 1;
   }
 
+  .extra-quantity {
+    justify-content: space-between;
+  }
+
+  .extra-quantity-input {
+    width: 100%;
+    max-width: 120px;
+  }
+
   .info-strip {
-    gap: 15px;
+    gap: 12px;
     flex-direction: column;
   }
 
+  .info-strip-item {
+    width: 100%;
+  }
+
+  .summary-venue-name {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+
+  .s-date {
+    margin-bottom: 20px;
+  }
+
+  .line-item {
+    align-items: flex-start;
+  }
+
   .total-amount {
-    font-size: 2.2rem; /* Text una mica més petit per a mòbils */
+    font-size: 2.2rem;
+  }
+
+  .export-btn {
+    width: 100%;
   }
 }
 
 /* Ajustos per a mòbils molt petits */
 @media (max-width: 480px) {
   .form-panel, .summary-panel {
-    padding: 30px 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .field input[type="text"].guests-input {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
+  }
+
+  .section-title {
+    margin-bottom: 18px;
+  }
+
+  .venue-card {
+    min-height: 72px;
+    padding: 20px 16px;
+  }
+
+  .venue-card-name {
+    font-size: 1.05rem;
+  }
+
+  .toggle-btn {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+
+  .extra-label,
+  .li-label {
+    font-size: 15px;
+  }
+
+  .extra-price,
+  .li-detail,
+  .summary-note,
+  .total-per-person {
+    font-size: 12px;
   }
 }

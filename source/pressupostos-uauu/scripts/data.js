@@ -1,25 +1,63 @@
 ﻿
 
 // ================================================================
-//  TAULES DE PREUS — Editar aquí per configurar tarifes
-//  Estructura: priceMatrix[any][diaDeLaSetmana] = llista de { months, price, minGuests }
+//  DATA CONFIGURATION FILE
+//  Structure: priceMatrix, venues, extras, translations
 //  diaDeLaSetmana: 0=Diumenge, 1=Dl, 2=Dm, 3=Dc, 4=Dj, 5=Dv, 6=Ds
-//  extras[any] = llista de { id, label, price, optional }
-//    optional: true = el client pot triar; false = sempre inclòs (obligatori)
-//  minimumPenaltyPerPerson: preu/persona cobrat per sota del mínim
 // ================================================================
+
+// ────────────────────────────────────────────────────────────────
+// 1. BASIC CONSTANTS
+// ────────────────────────────────────────────────────────────────
+
+const MONTHS_CA = ['Gener','Febrer','Març','Abril','Maig','Juny','Juliol','Agost','Setembre','Octubre','Novembre','Desembre'];
+const DAYS_CA   = ['Diumenge','Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte'];
+const DAYS_SHORT = ['Dg','Dl','Dm','Dc','Dj','Dv','Ds'];
+
+// ────────────────────────────────────────────────────────────────
+// 2. UTILITY FUNCTIONS
+// ────────────────────────────────────────────────────────────────
+
+function eur(n) {
+  return new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+}
+
+// ────────────────────────────────────────────────────────────────
+// 3. VENUES REFERENCE DATA
+// ────────────────────────────────────────────────────────────────
+
+const VENUES = [
+  { id: 'mas-vivencs',     name: 'Mas Vivencs',      logo: 'assets/logo-mas-vivencs.png',      type: 'Mas Rural'        },
+  { id: 'castell-de-tous', name: 'Castell de Tous',  logo: 'assets/logo-castell-de-tous.png',  type: 'Castell Històric' },
+  { id: 'can-macia',       name: 'Can Macià',         logo: 'assets/logo-can-macia.png',        type: 'Masia Rural'      },
+  { id: 'ca-nalzina',      name: "Ca n'Alzina",       logo: 'assets/logo-ca-nalzina.png',       type: 'Masia Rural'      },
+];
+
+// ────────────────────────────────────────────────────────────────
+// 4. QUANTITY-BASED EXTRAS (used in pricing config)
+// ────────────────────────────────────────────────────────────────
 
 const QUANTITY_EXTRAS = {
   2026: [
-    { id: 'menu-infantil', label: 'Menú infantil', price: 65,  unit: 'person', quantityBased: true, optional: true },
+    { id: 'childrenmenu', label: 'Menú infantil',  price: 65,  unit: 'person', quantityBased: true, optional: true },
   ],
   2027: [
-    { id: 'menu-infantil', label: 'Menú infantil', price: 68,  unit: 'person', quantityBased: true, optional: true },
+    { id: 'childrenmenu', label: 'Menú infantil',  price: 68,  unit: 'person', quantityBased: true, optional: true },
   ],
 };
 
-const PRICE_CONFIG = {
+// ────────────────────────────────────────────────────────────────
+// 5. PRICE CONFIGURATION & VENUE-SPECIFIC PRICING
+// ────────────────────────────────────────────────────────────────
+//  priceMatrix[year][dayOfWeek] = list of { months, price, minGuests }
+//  extras[year] = list of { id, label, price, optional }
+//    optional: true = client can choose; false = always included (mandatory)
+//    quantityBased: true = price calculated with input quantity
+//    pricePerPerson = alternative pricing model (price per guest)
+//  minimumPenaltyPerPerson = charge per person below minimum
+// ────────────────────────────────────────────────────────────────
 
+const PRICE_CONFIG = {
   vatRate: 0.10,  // IVA (10%)
 
   venues: {
@@ -74,12 +112,12 @@ const PRICE_CONFIG = {
         2026: [
           { id: 'ceremony',     label: 'Cerimònia',     price: 1190, optional: true  },
           { id: 'dj',           label: 'DJ',             price: 1195, optional: false },
-          { id: 'bridal-suite', label: 'Suite Nupcial',  price: 290,  optional: true  },
+          { id: 'bridalsuite', label: 'Suite Nupcial',  price: 290,  optional: true  },
           ...QUANTITY_EXTRAS[2026],
         ],
         2027: [
           { id: 'ceremony',           label: 'Cerimònia',                price: 1740, optional: true  },
-          { id: 'bridal-suite',       label: 'Suite Nupcial',            price: 295,  optional: true  },
+          { id: 'bridalsuite',       label: 'Suite Nupcial',            price: 295,  optional: true  },
           { id: 'essential-services', label: 'Quota serveis essencials', price: 890,  optional: false },
           { id: 'dj',                 label: 'DJ',                       price: 1250, optional: false },
           ...QUANTITY_EXTRAS[2027],
@@ -136,14 +174,14 @@ const PRICE_CONFIG = {
         2026: [
           { id: 'ceremony',          label: 'Cerimònia',          price: 1690, optional: true  },
           { id: 'dj',                label: 'DJ',                  price: 1195, optional: false },
-          { id: 'banquet-exterior',  label: 'Banquet a l\'exterior', price: 2500, optional: true  },
+          { id: 'banquetexterior',  label: 'Banquet a l\'exterior', price: 2500, optional: true  },
           ...QUANTITY_EXTRAS[2026],
         ],
         2027: [
           { id: 'ceremony',          label: 'Cerimònia',                price: 1740, optional: true  },
           { id: 'essential-services',label: 'Quota serveis essencials', price: 1490, optional: false },
           { id: 'dj',                label: 'DJ',                       price: 1250, optional: false },
-          { id: 'banquet-exterior',  label: 'Banquet a l\'exterior',    price: 2500, optional: true  },
+          { id: 'banquetexterior',  label: 'Banquet a l\'exterior',    price: 2500, optional: true  },
           ...QUANTITY_EXTRAS[2027],
         ],
       },
@@ -198,7 +236,7 @@ const PRICE_CONFIG = {
           { id: 'accommodation',    label: 'Allotjament',         price: 1190, optional: true,
             mandatoryWhen: (dow, month) => dow === 6 && [5,6,7,8,9,10].includes(month) },
           // Banquet exterior: 10€/persona, mínim 1500€
-          { id: 'banquet-exterior', label: "Banquet a l'exterior", pricePerPerson: 10, minPrice: 1500, optional: true },
+          { id: 'banquetexterior', label: "Banquet a l'exterior", pricePerPerson: 10, minPrice: 1500, optional: true },
           ...QUANTITY_EXTRAS[2026],
         ],
         2027: [
@@ -207,7 +245,7 @@ const PRICE_CONFIG = {
           { id: 'dj',                 label: 'DJ',                       price: 1250, optional: false },
           { id: 'accommodation',      label: 'Allotjament',              price: 1290, optional: true,
             mandatoryWhen: (dow, month) => dow === 6 && [5,6,7,8,9,10].includes(month) },
-          { id: 'banquet-exterior',   label: "Banquet a l'exterior",     pricePerPerson: 10, minPrice: 1500, optional: true },
+          { id: 'banquetexterior',   label: "Banquet a l'exterior",     pricePerPerson: 10, minPrice: 1500, optional: true },
           ...QUANTITY_EXTRAS[2027],
         ],
       },
@@ -260,7 +298,7 @@ const PRICE_CONFIG = {
           { id: 'dj',            label: 'DJ',                 price: 1195, optional: false },
           { id: 'accommodation', label: 'Allotjament',        price: 1290, optional: true,
             mandatoryWhen: (dow, month) => dow === 6 && [5,6,7,8,9,10].includes(month) },
-          { id: 'garden-aperitif', label: "Aperitiu al jardí", pricePerPerson: 10, minPrice: 1000, optional: true },
+          { id: 'gardenaperitif', label: "Aperitiu al jardí", pricePerPerson: 10, minPrice: 1000, optional: true },
           ...QUANTITY_EXTRAS[2026],
         ],
         2027: [
@@ -269,7 +307,7 @@ const PRICE_CONFIG = {
           { id: 'dj',                 label: 'DJ',                       price: 1250, optional: false },
           { id: 'accommodation',      label: 'Allotjament',              price: 1390, optional: true,
             mandatoryWhen: (dow, month) => dow === 6 && [5,6,7,8,9,10].includes(month) },
-          { id: 'garden-aperitif',    label: "Aperitiu al jardí",        pricePerPerson: 10, minPrice: 1000, optional: true },
+          { id: 'gardenaperitif',    label: "Aperitiu al jardí",        pricePerPerson: 10, minPrice: 1000, optional: true },
           ...QUANTITY_EXTRAS[2027],
         ],
       },
@@ -277,26 +315,10 @@ const PRICE_CONFIG = {
   },
 };
 
-// ================================================================
-//  FI TAULES DE PREUS
-// ================================================================
+// ────────────────────────────────────────────────────────────────
+// 6. TRANSLATIONS
+// ────────────────────────────────────────────────────────────────
 
-const VENUES = [
-  { id: 'mas-vivencs',     name: 'Mas Vivencs',      logo: 'assets/logo-mas-vivencs.png',      type: 'Mas Rural'        },
-  { id: 'castell-de-tous', name: 'Castell de Tous',  logo: 'assets/logo-castell-de-tous.png',  type: 'Castell Històric' },
-  { id: 'can-macia',       name: 'Can Macià',         logo: 'assets/logo-can-macia.png',        type: 'Masia Rural'      },
-  { id: 'ca-nalzina',      name: "Ca n'Alzina",       logo: 'assets/logo-ca-nalzina.png',       type: 'Masia Rural'      },
-];
-
-const MONTHS_CA = ['Gener','Febrer','Març','Abril','Maig','Juny','Juliol','Agost','Setembre','Octubre','Novembre','Desembre'];
-const DAYS_CA   = ['Diumenge','Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte'];
-const DAYS_SHORT = ['Dg','Dl','Dm','Dc','Dj','Dv','Ds'];
-
-function eur(n) {
-  return new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
-}
-
-// ── Translations ─────────────────────────────────────────────────
 const T = {
   ca: {
     exportBtn:       'Exportar PDF',
@@ -331,6 +353,13 @@ const T = {
     footerNote:      'Pressupost orientatiu i no vinculant.',
     locale:          'ca-ES',
     months:          ['Gener','Febrer','Març','Abril','Maig','Juny','Juliol','Agost','Setembre','Octubre','Novembre','Desembre'],
+    childrenmenu:    'Menú infantil',
+    essentialQuota:  'Quota serveis essencials',
+    ceremony:        'Cerimònia',
+    bridalsuite:     'La Suite',
+    banquetexterior: 'Banquet a l\'exterior',
+    accommodation:   'Allotjament',
+    gardenaperitif:  'Aperitiu al jardí',
   },
   es: {
     exportBtn:       'Exportar PDF',
@@ -365,6 +394,13 @@ const T = {
     footerNote:      'Presupuesto orientativo y no vinculante.',
     locale:          'es-ES',
     months:          ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    childrenmenu:    'Menú infantil',
+    essentialQuota:  'Cuota servicios esenciales',
+    ceremony:        'Cerimonia',
+    bridalsuite:     'La Suite',
+    banquetexterior: 'Banquete al exterior',
+    accommodation:   'Alojamiento',
+    gardenaperitif:  'Aperitivo al jardin',
   },
   en: {
     exportBtn:       'Export PDF',
@@ -399,9 +435,19 @@ const T = {
     footerNote:      'Indicative and non-binding estimate.',
     locale:          'en-GB',
     months:          ['January','February','March','April','May','June','July','August','September','October','November','December'],
+    childrenmenu:    'Children menu',
+    essentialQuota:  'Essential services fee',
+    ceremony:        'Ceremony',
+    bridalsuite:     'The Suite',
+    banquetexterior: 'Outdoor banquet',
+    accommodation:   'Accommodation',
+    gardenaperitif:  'Garden Aperitif',
   },
 };
 
+// ────────────────────────────────────────────────────────────────
+// 7. BUSINESS LOGIC & CALCULATION FUNCTIONS
+// ────────────────────────────────────────────────────────────────
 
 function lookupPrice(venueId, year, month, dow) {
   const v = PRICE_CONFIG.venues[venueId];
@@ -477,4 +523,16 @@ function computeQuote({ venue, date, guests, selectedExtras = {}, extraQuantitie
   };
 }
 
-
+function getExtraLabel(extraId, lang) {
+  const idToKey = {
+    'childrenmenu': 'childrenmenu',
+    'essential-services': 'essentialQuota',
+    'ceremony': 'ceremony',
+    'bridalsuite': 'bridalsuite',
+    'banquetexterior': 'banquetexterior',
+    'accommodation': 'accommodation',
+    'gardenaperitif': 'gardenaperitif',
+  };
+  const key = idToKey[extraId];
+  return key ? T[lang]?.[key] : null;
+}
